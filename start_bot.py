@@ -30,7 +30,7 @@ class iTelegramBot:
                  InlineKeyboardButton("Settings", callback_data='/settings')],
                 [InlineKeyboardButton("Option 3", callback_data='3')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        #update.message.reply_text('Hello {}! I\'m glad to see you! '.format(update.message.from_user.first_name), reply_markup=reply_markup)
+        update.message.reply_text('Hello {}! I\'m glad to see you! '.format(update.message.from_user.first_name), reply_markup=reply_markup)
         
 
     def button(self, bot, update):
@@ -38,6 +38,7 @@ class iTelegramBot:
         bot.edit_message_text(text="{}".format(query.data),
                                 chat_id=query.message.chat_id,
                                 message_id=query.message.message_id) 
+        # bot.send_message(chat_id=update.message.chat_id, text="{}".format(query.data))
           
     def run(self):
         """ запуск бота """   
