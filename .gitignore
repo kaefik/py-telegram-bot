@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# config files
+*.ini
+
+.vscode
+
 # C extensions
 *.so
 
