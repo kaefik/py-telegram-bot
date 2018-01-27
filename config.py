@@ -4,7 +4,6 @@ import os
 import csv
 import configparser
 
-
 class Config:
     
     def __init__(self,namefile_cfg = "config.ini"):
