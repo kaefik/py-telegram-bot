@@ -1,4 +1,4 @@
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, ConversationHandler
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, ConversationHandler, MessageHandler, Filters
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from config import Config
 import logging
@@ -21,6 +21,10 @@ class iTelegramBot:
         )
         self.bot.dispatcher.add_handler(self.conv_handler)
         """
+        # обработка документов
+        handlerDocument = MessageHandler(filters = Filters.document, callback=self.get_document)
+        self.bot.dispatcher.add_handler(handlerDocument)
+
         # регистрация обработчика используя паттерн срабатывания
         self.bot.dispatcher.add_handler(CallbackQueryHandler(self.about2,pattern="^about_bot$")) 
         # регистрация обработчика для inline клавиатуры
@@ -29,6 +33,13 @@ class iTelegramBot:
         self.reg_handler("start",self.start)
         self.reg_handler("about",self.about2)
         self.reg_handler("docs",self.docs)
+
+    # обработка получение документов от пользователя (сохранение в указанной папке)
+    def get_document(self,bot,update):
+        file_id = update.message.document.file_id
+        filename = update.message.document.file_name
+        newFile = bot.get_file(file_id)
+        newFile.download('files/savedoc/'+filename)
 
     def reg_handler(self, command=None,hand=None):
         """ регистрация команд которые обрабатывает бот """
