@@ -5,6 +5,21 @@ import logging
 
 ABOUT = range(1)
 
+allow_users = [{"username":"Oilnur","id":"3608708"}]
+
+# проверка на разрешенного пользователя
+def is_allow_user(func):
+    def wrapped(*args, **kwargs):
+        nameuser = args[2].message.from_user.username
+        print("Имя пользователя: ", nameuser)
+        for user in allow_users:
+            if user["username"]==nameuser:
+                return func(*args, **kwargs)
+        args[2].message.reply_text(text="Доступ запрещен. Обратитесь к администратору.")
+        return False
+    return wrapped
+
+
 class iTelegramBot:
     def __init__(self, token=None,level_loggining=logging.INFO):
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -56,12 +71,20 @@ class iTelegramBot:
         """ сообщает какие есть возможности у бота """
         query = update.callback_query
         bot.send_message(text="Здесь перечислены, то что я умею.",chat_id=query.message.chat_id)
-
-    def start(self, bot, update):       
+    
+    @is_allow_user
+    def start(self, bot, update):
+        """   
+        sender = update.message.from_user.username
+        if not is_allow_user(sender): 
+            update.message.reply_text("Доступ запрещен, обратитесь к администратору бота.")   
+            return
+        """
         keyboard = [[InlineKeyboardButton("Help", callback_data="about_bot"),
                  InlineKeyboardButton("Settings", callback_data='settings')],
                 [InlineKeyboardButton("Яndex", url='http://ya.ru')]]
         reply_markup = InlineKeyboardMarkup(keyboard)
+        
         update.message.reply_text('Hello {}! I\'m glad to see you! '.format(update.message.from_user.first_name), reply_markup=reply_markup)
         
 
